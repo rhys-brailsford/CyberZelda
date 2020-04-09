@@ -4,39 +4,60 @@ using UnityEngine;
 
 public class CharacterCollision : MonoBehaviour
 {
-    private List<Vector3> overlappedNorms;
+    public List<GameObject> overlappedObjs;
 
     private void Start()
     {
-        overlappedNorms = new List<Vector3>();
+        overlappedObjs = new List<GameObject>();
     }
 
     void OnTriggerEnter(Collider collider)
     {
-        if (collider.tag == "Blocking")
+        List<Tags> tags = collider.GetComponent<CustomTags>().tags;
+        if (tags.Contains(Tags.Blocking))
         {
-            Vector3 wallNormal = collider.GetComponent<WallCollision>().Normal();
-            overlappedNorms.Add(wallNormal);
+            overlappedObjs.Add(collider.gameObject);
+            //Debug.Log("Blocking entered");
         }
     }
+    
 
     void OnTriggerExit(Collider collider)
     {
-        if (collider.tag == "Blocking")
+        List<Tags> tags = collider.GetComponent<CustomTags>().tags;
+        if (tags.Contains(Tags.Blocking))
         {
-            Vector3 wallNormal = collider.GetComponent<WallCollision>().Normal();
-            overlappedNorms.Remove(wallNormal);
+            overlappedObjs.Remove(collider.gameObject);
+            //Debug.Log("Blocking exited");
         }
+    }
+
+    void FixedUpdate()
+    {
+        //CleanupNorms();
+    }
+
+    public void CleanupNorms()
+    {
+        overlappedObjs.RemoveAll(item => item == null);
+        overlappedObjs.RemoveAll(item => item.GetComponent<Collision>().collide == false);
     }
 
     public Vector3 CalculateAdjustedMovement(Vector3 movementVec)
     {
-        foreach (Vector3 norm in overlappedNorms)
+        CleanupNorms();
+        foreach (GameObject obj in overlappedObjs)
         {
+            //if (!obj.GetComponent<Collision>().collide)
+            //{
+            //    continue;
+            //}
+
             // Check if cross is needed
             // Hit normal impact DOT normalised inputVec
             // if dot > -1 => continue
             Vector3 moveNorm = Vector3.Normalize(movementVec);
+            Vector3 norm = obj.GetComponent<Collision>().Normal(transform.position);
             float dot = Vector3.Dot(norm, moveNorm);
             if (dot <= -1)
             {

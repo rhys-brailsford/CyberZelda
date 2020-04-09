@@ -8,4 +8,4 @@ public class GlobalEnums : MonoBehaviour
 
 public enum Direction { North, East, South, West };
 public enum BlockDirection { X, Z };
-public enum Tags { Blocking, CamBlocking, Enemy, PlayerWeapon };
+public enum Tags { Undefined, Blocking, CamBlocking, Enemy, PlayerWeapon, PlayerHitbox, Interactive, Grabbable, Draggable };

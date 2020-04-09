@@ -23,10 +23,10 @@ public class Weapon : MonoBehaviour
         Debug.Assert(attackSpeedSec > 0, "Attack duration must be > 0");
         Debug.Assert(damage > 0, "Attack damage must be > 0");
 
-        if (gameObject.tag != Tags.PlayerWeapon.ToString())
+        List<Tags> tags = gameObject.GetComponent<CustomTags>().tags;
+        if (!tags.Contains(Tags.PlayerWeapon))
         {
             Debug.LogError(Tags.PlayerWeapon + " tag expected on GameObject: " + gameObject.name + ". Original value: " + gameObject.tag);
-            gameObject.tag = Tags.PlayerWeapon.ToString();
         }
 
         ResetWeapon();
@@ -38,7 +38,7 @@ public class Weapon : MonoBehaviour
     {
         float input = Input.GetAxisRaw("Attack");       
 
-        if (!attacking && input > 0 && !attackHeld)
+        if (!attacking && input > 0 && !attackHeld && movementController.InputMoveable())
         {
             StartAttack();
         }
@@ -59,7 +59,7 @@ public class Weapon : MonoBehaviour
         gameObject.GetComponent<MeshCollider>().enabled = true;
         gameObject.GetComponent<MeshRenderer>().enabled = true;
 
-        movementController.DisableMovement();
+        movementController.DisableInputMovement();
     }
 
     void UpdateAttack()
@@ -68,7 +68,7 @@ public class Weapon : MonoBehaviour
         {
             // Turn off
             ResetWeapon();
-            movementController.EnableMovement();
+            movementController.EnableInputMovement();
             return;
         }
 

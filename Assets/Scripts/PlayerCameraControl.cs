@@ -4,23 +4,12 @@ using UnityEngine;
 
 public class PlayerCameraControl : MonoBehaviour
 {
-    // :TODO:
-    // Add tag for camera blockers
-    // Do actual blocking
-    // Make fixed/on rail camera option
-    // Set up version control
-
     public GameObject mainCamera;
     public float baseHeight;
 
     private bool blockX = false;
     private bool blockZ = false;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
@@ -45,24 +34,30 @@ public class PlayerCameraControl : MonoBehaviour
 
     void OnTriggerEnter(Collider collider)
     {
-        if (collider.tag != "CamBlocking")
+        List<Tags> tags = collider.GetComponent<CustomTags>().tags;
+        if (tags.Contains(Tags.CamBlocking))
         {
-            return;
-        }
-        BlockDirection blockDir = collider.GetComponent<CameraBlockCollision>().blockDir;
+            BlockDirection blockDir = collider.GetComponent<CameraBlockCollision>().blockDir;
 
-        SwitchBlockFlag(blockDir);
+            SwitchBlockFlag(blockDir);
+
+            //Debug.Log("CamBlocking entered");
+        }
+        
     }
 
     void OnTriggerExit(Collider collider)
     {
-        if (collider.tag != "CamBlocking")
+        List<Tags> tags = collider.GetComponent<CustomTags>().tags;
+        if (tags.Contains(Tags.CamBlocking))
         {
-            return;
-        }
-        BlockDirection blockDir = collider.GetComponent<CameraBlockCollision>().blockDir;
+            BlockDirection blockDir = collider.GetComponent<CameraBlockCollision>().blockDir;
 
-        SwitchBlockFlag(blockDir);
+            SwitchBlockFlag(blockDir);
+            //Debug.Log("CamBlocking exited");
+        }
+
+
     }
 
     void SwitchBlockFlag(BlockDirection direction)
