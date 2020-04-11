@@ -38,6 +38,7 @@ public class PlayerMovement : MonoBehaviour
     public float throwDur = 1;
     private float curThrowDur = 0;
     private Vector3 throwVec;
+    private float floorCoordinate = 1.6f;
 
     public InteractState interactState = InteractState.Idle;
     public MovementState movState = MovementState.Idle;
@@ -325,6 +326,7 @@ public class PlayerMovement : MonoBehaviour
             }
             dest = dest * throwStrength;
             dest = pickedUpObj.transform.position + dest;
+            dest.y = floorCoordinate;
             pickedUpObj.GetComponent<HoldableObj>().Throw(dest);
 
             // :Care:
