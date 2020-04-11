@@ -7,6 +7,7 @@ public class HoldableObj : InteractiveObj
     public bool explodeOnImpact = true;
 
     private bool thrown = false;
+    private bool pickedUp = false;
     private Vector3 throwDest;
     private Vector3 throwSrc;
     public float flightDur = 1;
@@ -29,8 +30,12 @@ public class HoldableObj : InteractiveObj
 
     public override void Interact(GameObject player)
     {
-        gameObject.GetComponent<Collision>().collide = false;
-        player.GetComponent<PlayerMovement>().PickupObject(gameObject);
+        if (!thrown && !pickedUp)
+        {
+            gameObject.GetComponent<Collision>().collide = false;
+            pickedUp = true;
+            player.GetComponent<PlayerMovement>().PickupObject(gameObject);
+        }
     }
 
     public void Throw(Vector3 destination)
