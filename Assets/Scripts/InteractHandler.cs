@@ -22,7 +22,8 @@ public class InteractHandler : MonoBehaviour
         List<Tags> tags = collider.GetComponent<CustomTags>().tags;
         if (tags.Contains(Tags.Interactive) || tags.Contains(Tags.Grabbable))
         {
-            if (selectedObj == collider.gameObject)
+            InteractState state = gameObject.GetComponentInParent<PlayerMovement>().interactState;
+            if (selectedObj == collider.gameObject && state == InteractState.Idle)
             {
                 selectedObj = null;
             }
@@ -38,15 +39,18 @@ public class InteractHandler : MonoBehaviour
 
         float interactInput = Input.GetAxisRaw("Interact");
         List<Tags> tags = selectedObj.GetComponent<CustomTags>().tags;
+        InteractState state = gameObject.GetComponentInParent<PlayerMovement>().interactState;
 
+        if (interactInput > 0 && state == InteractState.Holding)
+        {
+            gameObject.GetComponentInParent<PlayerMovement>().ThrowObj();
+            return;
+        }
         if (interactInput > 0 && gameObject.GetComponentInParent<PlayerMovement>().InputMoveable())
         {
             if (tags.Contains(Tags.Grabbable) && tags.Contains(Tags.Interactive))
             {
-                Debug.Log("Picking up: " + selectedObj);
                 selectedObj.GetComponent<InteractiveObj>().Interact(gameObject.transform.parent.gameObject);
-                //gameObject.GetComponentInParent<PlayerMovement>().Grab(selectedObj);
-                //gameObject.GetComponentInParent<PlayerMovement>().PickupObject();
             }
             else if (tags.Contains(Tags.Grabbable))
             {
@@ -59,13 +63,12 @@ public class InteractHandler : MonoBehaviour
                 selectedObj.GetComponent<InteractiveObj>().Interact(gameObject.transform.parent.gameObject);
             }
         }
-        if (interactInput == 0)
+        if (interactInput == 0 && state == InteractState.Grabbing)
         {
             if (tags.Contains(Tags.Grabbable))
             {
                 gameObject.GetComponentInParent<PlayerMovement>().Ungrab();
             }
         }
-        
     }
 }
