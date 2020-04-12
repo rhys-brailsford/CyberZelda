@@ -48,11 +48,6 @@ public class CharacterCollision : MonoBehaviour
         CleanupNorms();
         foreach (GameObject obj in overlappedObjs)
         {
-            //if (!obj.GetComponent<Collision>().collide)
-            //{
-            //    continue;
-            //}
-
             // Check if cross is needed
             // Hit normal impact DOT normalised inputVec
             // if dot > -1 => continue

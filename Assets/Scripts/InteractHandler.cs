@@ -8,7 +8,9 @@ public class InteractHandler : MonoBehaviour
 
     void OnTriggerEnter(Collider collider)
     {
-        List<Tags> tags = collider.GetComponent<CustomTags>().tags;
+        CustomTags tagsComp = collider.GetComponent<CustomTags>();
+        Debug.Assert(tagsComp != null, collider.name + ": has no custom tags component");
+        List<Tags> tags = tagsComp.tags;
         if (tags.Contains(Tags.Interactive) || tags.Contains(Tags.Grabbable)) {
             if (selectedObj == null)
             {

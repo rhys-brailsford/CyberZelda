@@ -10,9 +10,7 @@ public class EnemyHitbox : MonoBehaviour
     {
         List<Tags> tags = collider.GetComponent<CustomTags>().tags;
         if (tags.Contains(Tags.PlayerWeapon))
-        //if (collision.tag == Tags.PlayerWeapon.ToString())
         {
-            //Debug.Log("enemy hit!");
             healthScr.TakeDamage(collider.GetComponent<Weapon>().damage);
         }
     }

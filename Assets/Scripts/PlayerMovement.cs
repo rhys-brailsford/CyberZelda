@@ -43,6 +43,12 @@ public class PlayerMovement : MonoBehaviour
     public InteractState interactState = InteractState.Idle;
     public MovementState movState = MovementState.Idle;
 
+    private bool incline = false;
+    private float inclineFactor;
+    private Direction inclineDirection;
+    private float inclineStartCoord;
+    private float inclineStartY;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -167,7 +173,11 @@ public class PlayerMovement : MonoBehaviour
 
         float newX = curX + (movementVec.x * scale) * Time.deltaTime;
         float newZ = curZ + (movementVec.z * scale) * Time.deltaTime;
-        Vector3 newpositionVec = new Vector3(newX, transform.position.y, newZ);
+
+        // Check if incline
+        float newY = UpdateIncline();
+        Vector3 newpositionVec = new Vector3(newX, newY, newZ);
+        //Vector3 newpositionVec = new Vector3(newX, transform.position.y, newZ);
 
         return newpositionVec;
     }
@@ -214,7 +224,6 @@ public class PlayerMovement : MonoBehaviour
         movState = MovementState.KnockedBack;
 
     }
-
     private void KnockbackUpdate()
     {
         if (curKnockbackRemaining > 0)
@@ -240,7 +249,6 @@ public class PlayerMovement : MonoBehaviour
 
         interactState = InteractState.Grabbing;
     }
-
     public void Ungrab()
     {
         grabbedObj = null;
@@ -264,7 +272,6 @@ public class PlayerMovement : MonoBehaviour
 
         interactState = InteractState.PickingUp;
     }
-
     private void PickingUpObjUpdate()
     {
         // Animation finished, swap to "holdingObj" state
@@ -279,7 +286,6 @@ public class PlayerMovement : MonoBehaviour
 
         curPickingUpDuration += Time.deltaTime;
     }
-
     private void HoldingObjUpdate()
     {
         Vector3 temp = pickedUpObj.transform.position;
@@ -299,7 +305,6 @@ public class PlayerMovement : MonoBehaviour
 
         interactState = InteractState.Throwing;
     }
-
     private void ThrowObjUpdate()
     {
         if (curThrowDur > throwDur)
@@ -337,6 +342,77 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
         curThrowDur += Time.deltaTime;
+    }
+
+    public void StartIncline(Direction dir, float factor)
+    {
+        inclineStartY = transform.position.y;
+        inclineFactor = factor;
+        inclineDirection = dir;
+
+        switch (inclineDirection)
+        {
+            case (Direction.North):
+                inclineStartCoord = transform.position.z;
+                break;
+            case (Direction.East):
+                inclineStartCoord = transform.position.x;
+                break;
+            case (Direction.South):
+                inclineStartCoord = transform.position.z;
+                break;
+            case (Direction.West):
+                inclineStartCoord = transform.position.x;
+                break;
+            default:
+                Debug.Log("unsupported incline direction, error");
+                inclineStartCoord = transform.position.z;
+                break;
+        }
+
+        incline = true;
+    }
+    public void EndIncline()
+    {
+        incline = false;
+    }
+    private float UpdateIncline()
+    {
+        if (!incline)
+        {
+            return gameObject.transform.position.y;
+        }
+        //float curCoordinate = inclineDirection == Direction.North
+        float curCoordinate;
+        switch(inclineDirection)
+        {
+            case (Direction.North):
+                curCoordinate = transform.position.z;
+                break;
+            case (Direction.East):
+                curCoordinate = transform.position.x;
+                break;
+            case (Direction.South):
+                curCoordinate = transform.position.z;
+                break;
+            case (Direction.West):
+                curCoordinate = transform.position.x;
+                break;
+            default:
+                Debug.Log("unsupported incline direction, error");
+                curCoordinate = transform.position.z;
+                break;
+        }
+
+        float yOffset = (curCoordinate - inclineStartCoord) * inclineFactor;
+        if (inclineDirection == Direction.South || inclineDirection == Direction.West)
+        {
+            yOffset *= -1;
+        }
+
+        float y = inclineStartY + yOffset;
+
+        return y;
     }
 
     // Update is called once per frame

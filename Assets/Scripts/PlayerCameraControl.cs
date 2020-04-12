@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerCameraControl : MonoBehaviour
 {
     public GameObject mainCamera;
-    public float baseHeight;
+    public float heightDiff;
 
     private bool blockX = false;
     private bool blockZ = false;
@@ -15,11 +15,12 @@ public class PlayerCameraControl : MonoBehaviour
     void Update()
     {
         float playerX = gameObject.transform.position.x;
+        float playerY = gameObject.transform.position.y;
         float playerZ = gameObject.transform.position.z;
         float camX = mainCamera.transform.position.x;
         float camZ = mainCamera.transform.position.z;
 
-        Vector3 newPosition = new Vector3(playerX, baseHeight, playerZ);
+        Vector3 newPosition = new Vector3(playerX, playerY + heightDiff, playerZ);
 
         if (blockX)
         {
