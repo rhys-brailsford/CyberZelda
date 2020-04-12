@@ -36,22 +36,13 @@ public class Weapon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float input = Input.GetAxisRaw("Attack");       
-
-        if (!attacking && input > 0 && !attackHeld && movementController.InputMoveable())
-        {
-            StartAttack();
-        }
-
-        attackHeld = input == 1;
-
         if (attacking)
         {
             UpdateAttack();
         }
     }
 
-    void StartAttack()
+    public void StartAttack()
     {
         // Get ready to start attacking animation
         attacking = true;
