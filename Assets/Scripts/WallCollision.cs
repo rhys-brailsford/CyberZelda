@@ -17,7 +17,7 @@ public class WallCollision : Collision
     }
 
 
-    public override Vector3 Normal(Vector3 srcPosition)
+    public override Vector3 Normal(Collider srcCol)
     {
         return norm3d;
     }

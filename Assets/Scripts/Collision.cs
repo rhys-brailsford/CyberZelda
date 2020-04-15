@@ -5,5 +5,5 @@ using UnityEngine;
 public abstract class Collision : MonoBehaviour
 {
     public bool collide = true;
-    public abstract Vector3 Normal(Vector3 srcPosition);
+    public abstract Vector3 Normal(Collider srcCol);
 }
