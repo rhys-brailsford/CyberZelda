@@ -42,6 +42,8 @@ public class PlayerCameraControl : MonoBehaviour
 
     void OnTriggerEnter(Collider collider)
     {
+        //print(collider.name);
+
         List<Tags> tags = collider.GetComponent<CustomTags>().tags;
         if (tags.Contains(Tags.CamBlocking))
         {

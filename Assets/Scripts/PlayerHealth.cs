@@ -27,7 +27,7 @@ public class PlayerHealth : MonoBehaviour
             gameObject.GetComponent<MeshRenderer>().materials[0].SetColor("_Color", Color.green);
 
             // Check buffered colliders
-            Bounds playerBounds = gameObject.GetComponent<BoxCollider>().bounds;
+            Bounds playerBounds = gameObject.GetComponent<Collider>().bounds;
             // :TODO:
             // Sort colliders by distance from player so shortest distance (deepest intersect) takes priority
             foreach (Collider col in bufferedColliders)

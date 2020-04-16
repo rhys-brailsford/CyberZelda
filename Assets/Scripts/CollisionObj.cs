@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Custom collision for standalone objects
+// Now redundant due to using physics collision
 public class CollisionObj : Collision
 {
     // Normals of 4 walls in order North, East, South, West
