@@ -52,7 +52,8 @@ public class CharacterCollision : MonoBehaviour
             // Hit normal impact DOT normalised inputVec
             // if dot > -1 => continue
             Vector3 moveNorm = Vector3.Normalize(movementVec);
-            Vector3 norm = obj.GetComponent<Collision>().Normal(transform.position);
+            Vector3 norm = obj.GetComponent<Collision>().Normal(transform.GetComponent<Collider>());
+            //Vector3 norm = obj.GetComponent<Collision>().Normal(transform.position);
             float dot = Vector3.Dot(norm, moveNorm);
             if (dot <= -1)
             {

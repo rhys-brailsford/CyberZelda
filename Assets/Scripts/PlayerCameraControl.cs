@@ -10,7 +10,12 @@ public class PlayerCameraControl : MonoBehaviour
     private bool blockX = false;
     private bool blockZ = false;
 
+    public float offsetZ = 0;
 
+    private void Start()
+    {
+        //mainCamera.transform.RotateAround(gameObject.transform.position, new Vector3(1, 0, 0), rotX);
+    }
     // Update is called once per frame
     void Update()
     {
@@ -20,7 +25,7 @@ public class PlayerCameraControl : MonoBehaviour
         float camX = mainCamera.transform.position.x;
         float camZ = mainCamera.transform.position.z;
 
-        Vector3 newPosition = new Vector3(playerX, playerY + heightDiff, playerZ);
+        Vector3 newPosition = new Vector3(playerX, playerY + heightDiff, playerZ-offsetZ);
 
         if (blockX)
         {
@@ -31,6 +36,8 @@ public class PlayerCameraControl : MonoBehaviour
             newPosition.z = camZ;
         }
         mainCamera.transform.position = newPosition;
+
+        mainCamera.transform.LookAt(gameObject.transform, new Vector3(0,0,1));
     }
 
     void OnTriggerEnter(Collider collider)
