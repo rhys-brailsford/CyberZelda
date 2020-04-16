@@ -7,6 +7,7 @@ public class CollisionObj : Collision
     // Normals of 4 walls in order North, East, South, West
     public Vector3[] norms;
 
+    // Angle ranges for deciding which normal to use, x = min angle, y = max angle
     public Vector2[] angleVals;
 
     public bool square = false;
