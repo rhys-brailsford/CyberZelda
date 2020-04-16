@@ -10,7 +10,6 @@ public class Weapon : MonoBehaviour
     private int attackStages = 0;
     private bool attacking = false;
     private float curAttackDuration = 0;
-    private bool attackHeld = false;
 
     public PlayerMovement movementController;
 

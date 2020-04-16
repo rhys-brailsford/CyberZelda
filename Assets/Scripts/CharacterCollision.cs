@@ -11,26 +11,26 @@ public class CharacterCollision : MonoBehaviour
         overlappedObjs = new List<GameObject>();
     }
 
-    void OnTriggerEnter(Collider collider)
-    {
-        List<Tags> tags = collider.GetComponent<CustomTags>().tags;
-        if (tags.Contains(Tags.Blocking))
-        {
-            overlappedObjs.Add(collider.gameObject);
-            //Debug.Log("Blocking entered");
-        }
-    }
+    //void OnTriggerEnter(Collider collider)
+    //{
+    //    List<Tags> tags = collider.GetComponent<CustomTags>().tags;
+    //    if (tags.Contains(Tags.Blocking))
+    //    {
+    //        overlappedObjs.Add(collider.gameObject);
+    //        //Debug.Log("Blocking entered");
+    //    }
+    //}
     
 
-    void OnTriggerExit(Collider collider)
-    {
-        List<Tags> tags = collider.GetComponent<CustomTags>().tags;
-        if (tags.Contains(Tags.Blocking))
-        {
-            overlappedObjs.Remove(collider.gameObject);
-            //Debug.Log("Blocking exited");
-        }
-    }
+    //void OnTriggerExit(Collider collider)
+    //{
+    //    List<Tags> tags = collider.GetComponent<CustomTags>().tags;
+    //    if (tags.Contains(Tags.Blocking))
+    //    {
+    //        overlappedObjs.Remove(collider.gameObject);
+    //        //Debug.Log("Blocking exited");
+    //    }
+    //}
 
     void FixedUpdate()
     {

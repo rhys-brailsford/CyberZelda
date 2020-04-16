@@ -95,7 +95,6 @@ public class MeshCollision : Collision
         // Find which faces are relevant
         List<Face> relevantFaces = new List<Face>();
 
-        int i = 0;
         float minDot = 100;
 
         foreach (Face curFace in faces)

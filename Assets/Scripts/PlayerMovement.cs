@@ -10,10 +10,13 @@ public class PlayerMovement : MonoBehaviour
 
     public CharacterCollision collisionScript;
 
+    private Rigidbody rb;
+
     public Direction currentDirection;
     public int[] inputAge = { 0, 0, 0, 0 };
     private float[] inputs = { 0, 0 };
     private float scaledSpeed;
+    private float speedToUse;
     private Vector3 movementVec;
     private bool inputMoveable = true;
     private bool moveable = true;
@@ -53,8 +56,10 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         scaledSpeed = speed / 10;
+        //scaledSpeed = speed;
         currentDirection = Direction.South;
         movementVec = new Vector3(0, 0, 0);
+        rb = gameObject.GetComponent<Rigidbody>();
     }
 
     void UpdateInputAge()
@@ -163,24 +168,22 @@ public class PlayerMovement : MonoBehaviour
         float inputZ = Input.GetAxisRaw("Vertical");
 
         Vector3 result = Vector3.Normalize(new Vector3(inputX, 0, inputZ));
+
         return result;
     }
 
-    Vector3 CalculateNewPosition(Vector3 movementVec, float scale)
-    {
-        float curX = transform.position.x;
-        float curZ = transform.position.z;
+    //Vector3 CalculateNewPosition(Vector3 movementVec, float scale)
+    //{
+    //    float curX = transform.position.x;
+    //    float curZ = transform.position.z;
 
-        float newX = curX + (movementVec.x * scale) * Time.deltaTime;
-        float newZ = curZ + (movementVec.z * scale) * Time.deltaTime;
+    //    float newX = curX + (movementVec.x * scale) * Time.deltaTime;
+    //    float newZ = curZ + (movementVec.z * scale) * Time.deltaTime;
 
-        // Check if incline
-        float newY = UpdateIncline();
-        Vector3 newpositionVec = new Vector3(newX, newY, newZ);
-        //Vector3 newpositionVec = new Vector3(newX, transform.position.y, newZ);
+    //    Vector3 newpositionVec = new Vector3(newX, transform.position.y, newZ);
 
-        return newpositionVec;
-    }
+    //    return newpositionVec;
+    //}
 
     public void DisableInputMovement()
     {
@@ -228,10 +231,9 @@ public class PlayerMovement : MonoBehaviour
     {
         if (curKnockbackRemaining > 0)
         {
-            movementVec = collisionScript.CalculateAdjustedMovement(knockbackVec);
-
             // Apply some knockback movement
-            gameObject.transform.position = CalculateNewPosition(movementVec, knockbackStrength);
+            movementVec = knockbackVec;
+            speedToUse = knockbackStrength;
 
             curKnockbackRemaining -= Time.deltaTime;
         }
@@ -299,7 +301,6 @@ public class PlayerMovement : MonoBehaviour
 
     public void ThrowObj()
     {
-
         DisableInputMovement();
         curThrowDur = 0;
 
@@ -376,43 +377,42 @@ public class PlayerMovement : MonoBehaviour
     {
         incline = false;
     }
-    private float UpdateIncline()
+    private void UpdateIncline()
     {
         if (!incline)
         {
-            return gameObject.transform.position.y;
+            return;
         }
-        //float curCoordinate = inclineDirection == Direction.North
         float curCoordinate;
-        switch(inclineDirection)
+        switch (inclineDirection)
         {
             case (Direction.North):
-                curCoordinate = transform.position.z;
+                curCoordinate = movementVec.z;
                 break;
             case (Direction.East):
-                curCoordinate = transform.position.x;
+                curCoordinate = movementVec.x;
                 break;
             case (Direction.South):
-                curCoordinate = transform.position.z;
+                curCoordinate = -movementVec.z;
                 break;
             case (Direction.West):
-                curCoordinate = transform.position.x;
+                curCoordinate = -movementVec.x;
                 break;
             default:
                 Debug.Log("unsupported incline direction, error");
-                curCoordinate = transform.position.z;
+                curCoordinate = movementVec.z;
                 break;
         }
+        movementVec.y = curCoordinate * inclineFactor;
+        movementVec = Vector3.Normalize(movementVec);
 
-        float yOffset = (curCoordinate - inclineStartCoord) * inclineFactor;
-        if (inclineDirection == Direction.South || inclineDirection == Direction.West)
-        {
-            yOffset *= -1;
-        }
+        //float yOffset = (curCoordinate - inclineStartCoord) * inclineFactor;
+        //if (inclineDirection == Direction.South || inclineDirection == Direction.West)
+        //{
+        //    yOffset *= -1;
+        //}
 
-        float y = inclineStartY + yOffset;
-
-        return y;
+        //float y = (inclineStartY + yOffset);
     }
 
     // Update is called once per frame
@@ -420,21 +420,40 @@ public class PlayerMovement : MonoBehaviour
     {
         UpdateInputAge();
 
+        // Increase speed, for testing
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            scaledSpeed = speed / 5;
+        }
+        else
+        {
+            scaledSpeed = speed / 10;
+        }
+
         // Handle movement first
         if (inputMoveable)
         {
             movementVec = CalculateMovementVec();
-            movementVec = collisionScript.CalculateAdjustedMovement(movementVec);
+            if (incline)
+            {
+                UpdateIncline();
+            }
+            
+            speedToUse = scaledSpeed;
 
-            gameObject.transform.position = CalculateNewPosition(movementVec, scaledSpeed);
             currentDirection = CalculateDirection();
             RotateToCurrentDirection();
+        }
+        else
+        {
+            movementVec = new Vector3(0, 0, 0);
         }
         if (movState == MovementState.KnockedBack)
         {
             KnockbackUpdate();
         }
-
+        
+        // Handle interact behaviours
         if (interactState == InteractState.Holding)
         {
             HoldingObjUpdate();
@@ -459,5 +478,10 @@ public class PlayerMovement : MonoBehaviour
             // Could use a delay, or force player to give new inputs.
             //EnableInputMovement();
         }
+    }
+
+    private void FixedUpdate()
+    {
+        rb.MovePosition(rb.position + (movementVec * speedToUse * Time.fixedDeltaTime));
     }
 }

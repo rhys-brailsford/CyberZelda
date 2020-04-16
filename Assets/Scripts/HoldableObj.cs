@@ -32,7 +32,7 @@ public class HoldableObj : InteractiveObj
     {
         if (!thrown && !pickedUp)
         {
-            gameObject.GetComponent<Collision>().collide = false;
+            gameObject.GetComponent<Collider>().isTrigger = true;
             pickedUp = true;
             player.GetComponent<PlayerMovement>().PickupObject(gameObject);
         }
