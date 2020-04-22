@@ -5,12 +5,18 @@ using UnityEngine;
 public class InputHandler : MonoBehaviour
 {
     public GameObject weaponObject;
-    public Weapon weaponScript;
+    private Weapon weaponScript;
     private bool atkHeld = false;
 
     public GameObject interactObject;
-    public InteractHandler interactHandler;
+    private InteractHandler interactHandler;
     private bool intHeld = false;
+
+    private bool useHeld = false;
+
+    public Inventory inventoryHandler;
+    private bool equip1Held = false;
+    private bool equip2Held = false;
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +41,55 @@ public class InputHandler : MonoBehaviour
 
         HandleAttack(atk);
         HandleInteract(interact);
+
+        float useEquipped = Input.GetAxisRaw("UseEquipped");
+        HandleUseEquipped(useEquipped);
+
+        // Temporary equip inputs
+        float equip1 = Input.GetAxisRaw("EquipSlot1");
+        HandleEquip(equip1);
+    }
+
+    // Temporary item equip handler
+    private void HandleEquip(float input)
+    {
+        if (input > 0)
+        {
+            ItemName itemEquipped = inventoryHandler.equippedItem;
+            switch(itemEquipped)
+            {
+                case (ItemName.TempInvItem1):
+                    inventoryHandler.EquipItem(ItemName.Gun);
+                    break;
+                case (ItemName.Gun):
+                    inventoryHandler.EquipItem(ItemName.TempInvItem1);
+                    break;
+                default:
+                    inventoryHandler.EquipItem(ItemName.Gun);
+                    break;
+            }
+        }
+    }
+
+    private void HandleUseEquipped(float input)
+    {
+        if (input > 0)
+        {
+            if (!useHeld)
+            {
+                GameManager.GM.GetPlayer().GetComponent<PlayerMovement>().UseEquipped();
+            }
+            else
+            {
+                // :TODO: UseEquipped held behaviour
+            }
+
+            useHeld = true;
+        }
+        else
+        {
+            useHeld = false;
+        }
     }
 
     private void HandleAttack(float input)

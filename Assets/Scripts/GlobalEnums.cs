@@ -11,4 +11,4 @@ public enum BlockDirection { X, Z };
 public enum Tags { Undefined, Blocking, CamBlocking, Enemy, PlayerWeapon, PlayerHitbox, Interactive, Grabbable, Draggable };
 public enum InteractState { Idle, Grabbing, PickingUp, Holding, Throwing, Interacting };
 public enum MovementState { Idle, Walking, KnockedBack };
-public enum ItemName { Undefined, Heart, Ammo, Gun };
+public enum ItemName { Undefined, Heart, Ammo, Gun, TempInvItem1 };

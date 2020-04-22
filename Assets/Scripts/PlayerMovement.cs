@@ -420,6 +420,20 @@ public class PlayerMovement : MonoBehaviour
         //float y = (inclineStartY + yOffset);
     }
 
+    public void UseEquipped()
+    {
+        Inventory inv = gameObject.GetComponent<Inventory>();
+        if (inv.equippedItem == ItemName.Undefined)
+        {
+            Debug.Log("Attempting to use item when nothing is equipped");
+            return;
+        }
+
+        Debug.Log("UseEquipped called!");
+        InventoryItem equippedItem = (InventoryItem)ItemList.IL.GetItem(inv.equippedItem);
+        equippedItem.UseItem();
+    }
+
     // Update is called once per frame
     void Update()
     {
