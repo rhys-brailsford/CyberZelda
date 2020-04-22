@@ -133,6 +133,24 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    // Get direction of player in degrees relative to north (Z-forward)
+    public float GetDirectionDeg()
+    {
+        switch(currentDirection)
+        {
+            case (Direction.North):
+                return 0;
+            case (Direction.East):
+                return 90;
+            case (Direction.South):
+                return 180;
+            case (Direction.West):
+                return 270;
+            default:
+                return 0;
+        }
+    }
+
     void RotateToCurrentDirection()
     {
         // North: 0,0,0
@@ -171,19 +189,6 @@ public class PlayerMovement : MonoBehaviour
 
         return result;
     }
-
-    //Vector3 CalculateNewPosition(Vector3 movementVec, float scale)
-    //{
-    //    float curX = transform.position.x;
-    //    float curZ = transform.position.z;
-
-    //    float newX = curX + (movementVec.x * scale) * Time.deltaTime;
-    //    float newZ = curZ + (movementVec.z * scale) * Time.deltaTime;
-
-    //    Vector3 newpositionVec = new Vector3(newX, transform.position.y, newZ);
-
-    //    return newpositionVec;
-    //}
 
     public void DisableInputMovement()
     {
