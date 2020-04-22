@@ -5,11 +5,11 @@ using UnityEngine;
 public class InputHandler : MonoBehaviour
 {
     public GameObject weaponObject;
-    public Weapon wepScript;
+    public Weapon weaponScript;
     private bool atkHeld = false;
 
     public GameObject interactObject;
-    public InteractHandler intScript;
+    public InteractHandler interactHandler;
     private bool intHeld = false;
 
     // Start is called before the first frame update
@@ -18,11 +18,11 @@ public class InputHandler : MonoBehaviour
         Debug.Assert(weaponObject != null, "InputHandler: Weapon Object cannot be empty!");
         Debug.Assert(interactObject != null, "InputHandler: Interact Object cannot be empty!");
 
-        wepScript = weaponObject.GetComponent<Weapon>();
-        intScript = interactObject.GetComponent<InteractHandler>();
+        weaponScript = weaponObject.GetComponent<Weapon>();
+        interactHandler = interactObject.GetComponent<InteractHandler>();
 
-        Debug.Assert(wepScript != null, "InputHandler: Weapon Object must contain Weapon script!");
-        Debug.Assert(intScript != null, "InputHandler: Interact Object must contain InteractHandler script!");
+        Debug.Assert(weaponScript != null, "InputHandler: Weapon Object must contain Weapon script!");
+        Debug.Assert(interactHandler != null, "InputHandler: Interact Object must contain InteractHandler script!");
     }
 
     // Update is called once per frame
@@ -44,7 +44,7 @@ public class InputHandler : MonoBehaviour
             if (!atkHeld)
             {
                 Debug.Log("Attack Input");
-                wepScript.StartAttack();
+                weaponScript.StartAttack();
             }
             else
             {
@@ -65,8 +65,7 @@ public class InputHandler : MonoBehaviour
         {
             if (!intHeld)
             {
-                Debug.Log("InteractStart Input");
-                intScript.StartInteract();
+                interactHandler.StartInteract();
             }
             intHeld = true;
         }
@@ -74,8 +73,7 @@ public class InputHandler : MonoBehaviour
         {
             if (intHeld)
             {
-                Debug.Log("InteractStart Input");
-                intScript.EndInteract();
+                interactHandler.EndInteract();
             }
             intHeld = false;
         }
