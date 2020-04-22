@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GunItem : InventoryItem
+public class TempInvItem1 : InventoryItem
 {
     public override void PickupUse()
     {
-        // Add item to players inventory on pickup
-        GameManager.GM.GetPlayer().GetComponent<Inventory>().AddItem(ItemName.Gun);
+        Debug.Log("TEMP ITEM PICKUP");
+        throw new System.NotImplementedException();
     }
 
     public override void UseItem()
     {
-        Debug.Log("GUN USEITEM");
+        Debug.Log("TEMPITEM USE");
         throw new System.NotImplementedException();
     }
 }

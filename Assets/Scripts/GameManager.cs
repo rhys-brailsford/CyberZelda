@@ -9,7 +9,8 @@ public class GameManager : MonoBehaviour
     // Singleton ItemList variable
     public static GameManager GM;
 
-    public GameObject playerObj;
+    [SerializeField]
+    private GameObject playerObj;
 
     void Awake()
     {

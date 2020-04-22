@@ -43,6 +43,7 @@ public class ItemList : MonoBehaviour
         itemTypes.Add(ItemName.Ammo, typeof(AmmoItem));
         itemTypes.Add(ItemName.Heart, typeof(HeartItem));
         itemTypes.Add(ItemName.Gun, typeof(GunItem));
+        itemTypes.Add(ItemName.TempInvItem1, typeof(TempInvItem1));
         itemTypes.Add(ItemName.Undefined, null);
 
         // Assert that every item type is accounted for
