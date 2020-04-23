@@ -12,8 +12,9 @@ public class ItemBox : InteractiveObj
 
     private Vector3 forwardDirection;
     private float forwardDirDeg;
-    
 
+    private float displayDuration = 3;
+    
     private IEnumerator DisplayItemAndDestroy(float displayTime)
     {
         displayedItem.GetComponent<MeshRenderer>().enabled = true;
@@ -42,7 +43,7 @@ public class ItemBox : InteractiveObj
             // Pickup item
             obj.PickupUse();
             // Display item contents
-            StartCoroutine("DisplayItemAndDestroy", 3);
+            StartCoroutine("DisplayItemAndDestroy", displayDuration);
         }
         else
         {

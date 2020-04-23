@@ -422,7 +422,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void UseEquipped()
     {
-        Inventory inv = gameObject.GetComponent<Inventory>();
+        Inventory inv = PlayerStats.PS.Inventory();
         if (inv.equippedItem == ItemName.Undefined)
         {
             Debug.Log("Attempting to use item when nothing is equipped");

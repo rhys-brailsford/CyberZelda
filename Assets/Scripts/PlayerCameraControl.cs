@@ -14,8 +14,9 @@ public class PlayerCameraControl : MonoBehaviour
 
     private void Start()
     {
-        //mainCamera.transform.RotateAround(gameObject.transform.position, new Vector3(1, 0, 0), rotX);
+        mainCamera = GameManager.GM.GetCamera();
     }
+
     // Update is called once per frame
     void Update()
     {
