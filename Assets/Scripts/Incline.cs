@@ -7,14 +7,16 @@ public class Incline : MonoBehaviour
     private float incline = 1;
     public float inclineHeight = 0;
     private float playerHeight;
-    public GameObject player;
     public Direction inclineDirection = Direction.North;
+
+    public GameObject player;
 
     // Start is called before the first frame update
     void Start()
     {
-        // Calculate inclineFactor
+        player = GameManager.GM.GetPlayer();
 
+        // Calculate inclineFactor
         playerHeight = player.GetComponent<Collider>().bounds.size.y;
         Collider collider = GetComponent<Collider>();
 

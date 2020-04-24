@@ -15,8 +15,6 @@ public class InputHandler : MonoBehaviour
     private bool useHeld = false;
 
     public Inventory inventoryHandler;
-    private bool equip1Held = false;
-    private bool equip2Held = false;
 
     // Start is called before the first frame update
     void Start()

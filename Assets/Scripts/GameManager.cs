@@ -9,8 +9,15 @@ public class GameManager : MonoBehaviour
     // Singleton ItemList variable
     public static GameManager GM;
 
-    [SerializeField]
+
+    [SerializeField] private GameObject playerObjTest;
+    [SerializeField] private GameObject cameraObjTest;
+
+    [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject cameraPrefab;
+
     private GameObject playerObj;
+    private GameObject cameraObj;
 
     void Awake()
     {
@@ -25,10 +32,44 @@ public class GameManager : MonoBehaviour
         }
 
         DontDestroyOnLoad(this);
+
+        // If prefabs are not set, use default values
+        if (playerPrefab == null)
+        {
+            playerPrefab = (GameObject)Resources.Load("PF_Player");
+        }
+        if (cameraPrefab == null)
+        {
+            cameraPrefab = (GameObject)Resources.Load("PF_DefaultCamera");
+        }
+
+        // Create player and camera object
+        if (playerObjTest == null)
+        {
+            playerObj = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+        }
+        else
+        {
+            playerObj = playerObjTest;
+        }
+
+        if (cameraObjTest == null)
+        {
+            cameraObj = Instantiate(cameraPrefab, cameraPrefab.transform.position, cameraPrefab.transform.rotation);
+        }
+        else
+        {
+            cameraObj = cameraObjTest;
+        }
     }
-    
+
+
     public GameObject GetPlayer()
     {
         return playerObj;
+    }
+    public GameObject GetCamera()
+    {
+        return cameraObj;
     }
 }
