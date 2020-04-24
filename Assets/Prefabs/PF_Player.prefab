@@ -224,6 +224,13 @@ MonoBehaviour:
   throwDur: 0.5
   interactState: 0
   movState: 0
+  height: 2
+  heightPadding: 0.5
+  ground:
+    serializedVersion: 2
+    m_Bits: 256
+  maxGroundAngle: 120
+  debug: 1
 --- !u!114 &5610505266270730141
 MonoBehaviour:
   m_ObjectHideFlags: 0

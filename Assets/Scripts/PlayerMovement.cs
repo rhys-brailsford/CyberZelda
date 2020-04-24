@@ -52,6 +52,15 @@ public class PlayerMovement : MonoBehaviour
     private float inclineStartCoord;
     private float inclineStartY;
 
+    public float height = 2;
+    public float heightPadding = 0.5f;
+    public float inGroundAdjustSpeed = 5;
+    public LayerMask ground;
+    public bool debug = false;
+
+    RaycastHit hitInfo;
+    bool grounded;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -240,7 +249,7 @@ public class PlayerMovement : MonoBehaviour
             movementVec = knockbackVec;
             speedToUse = knockbackStrength;
 
-            curKnockbackRemaining -= Time.deltaTime;
+            curKnockbackRemaining -= Time.fixedDeltaTime;
         }
         else
         {
@@ -434,6 +443,57 @@ public class PlayerMovement : MonoBehaviour
         equippedItem.UseItem();
     }
 
+    void CheckGround()
+    {
+        bool hitSuccess = Physics.Raycast(transform.position,       // src position
+                                          -Vector3.up,              // raycast direction
+                                          out hitInfo,              // output info
+                                          height + heightPadding,   // max distance
+                                          ground);                  // layer
+        if (hitSuccess)
+        {
+            if (hitInfo.distance < height)
+            {
+                transform.position = Vector3.Lerp(transform.position,
+                                                  transform.position + Vector3.up * height,
+                                                  inGroundAdjustSpeed * Time.fixedDeltaTime);
+            }
+            grounded = true;
+        }
+        else
+        {
+            grounded = false;
+        }
+    }
+
+    void ApplyGravity()
+    {
+        if (!grounded)
+        {
+            // Different alternatives for applying gravity.
+            //movementVec = Vector3.down;
+            //movementVec += Vector3.down;
+            // Works well with gravity ~-2.5y
+            movementVec += Physics.gravity;
+        }
+    }
+
+    void ApplyIncline()
+    {
+        // Project movement vector to plane of incline
+        Vector3 projToPlane = Vector3.ProjectOnPlane(movementVec, hitInfo.normal);
+
+        if (debug)
+        {
+            // draw debug line
+            Vector3 inclineVec = Vector3.Cross(transform.right, hitInfo.normal);
+            Debug.DrawLine(transform.position, transform.position + inclineVec * height * 2, Color.yellow);
+            Debug.DrawLine(transform.position, transform.position + projToPlane * height * 2, Color.magenta);
+        }
+
+        movementVec = projToPlane;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -447,29 +507,6 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             scaledSpeed = speed / 10;
-        }
-
-        // Handle movement first
-        if (inputMoveable)
-        {
-            movementVec = CalculateMovementVec();
-            if (incline)
-            {
-                UpdateIncline();
-            }
-            
-            speedToUse = scaledSpeed;
-
-            currentDirection = CalculateDirection();
-            RotateToCurrentDirection();
-        }
-        else
-        {
-            movementVec = new Vector3(0, 0, 0);
-        }
-        if (movState == MovementState.KnockedBack)
-        {
-            KnockbackUpdate();
         }
         
         // Handle interact behaviours
@@ -499,8 +536,27 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+
+
     private void FixedUpdate()
     {
+        if (!inputMoveable)
+        {
+            movementVec = Vector3.zero;
+        }
+        else
+        {
+            speedToUse = scaledSpeed;
+            movementVec = CalculateMovementVec();
+            currentDirection = CalculateDirection();
+            RotateToCurrentDirection();
+        }
+
+        KnockbackUpdate();
+        CheckGround();
+        ApplyIncline();
+        ApplyGravity();
+
         rb.MovePosition(rb.position + (movementVec * speedToUse * Time.fixedDeltaTime));
     }
 }

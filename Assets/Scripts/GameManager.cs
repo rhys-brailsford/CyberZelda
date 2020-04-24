@@ -9,10 +9,12 @@ public class GameManager : MonoBehaviour
     // Singleton ItemList variable
     public static GameManager GM;
 
-    [SerializeField]
-    private GameObject playerPrefab;
-    [SerializeField]
-    private GameObject cameraPrefab;
+
+    [SerializeField] private GameObject playerObjTest;
+    [SerializeField] private GameObject cameraObjTest;
+
+    [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject cameraPrefab;
 
     private GameObject playerObj;
     private GameObject cameraObj;
@@ -42,8 +44,23 @@ public class GameManager : MonoBehaviour
         }
 
         // Create player and camera object
-        playerObj = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
-        cameraObj = Instantiate(cameraPrefab, cameraPrefab.transform.position, cameraPrefab.transform.rotation);
+        if (playerObjTest == null)
+        {
+            playerObj = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+        }
+        else
+        {
+            playerObj = playerObjTest;
+        }
+
+        if (cameraObjTest == null)
+        {
+            cameraObj = Instantiate(cameraPrefab, cameraPrefab.transform.position, cameraPrefab.transform.rotation);
+        }
+        else
+        {
+            cameraObj = cameraObjTest;
+        }
     }
 
 
