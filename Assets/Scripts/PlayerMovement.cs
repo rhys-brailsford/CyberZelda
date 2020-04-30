@@ -53,6 +53,7 @@ public class PlayerMovement : MonoBehaviour
     private float inclineStartY;
 
     public float height = 2;
+    private float halfHeight;
     public float heightPadding = 0.5f;
     public float inGroundAdjustSpeed = 5;
     public LayerMask ground;
@@ -69,6 +70,7 @@ public class PlayerMovement : MonoBehaviour
         currentDirection = Direction.South;
         movementVec = new Vector3(0, 0, 0);
         rb = gameObject.GetComponent<Rigidbody>();
+        halfHeight = height / 2.0f;
     }
 
     void UpdateInputAge()
@@ -243,6 +245,11 @@ public class PlayerMovement : MonoBehaviour
     }
     private void KnockbackUpdate()
     {
+        if (movState != MovementState.KnockedBack)
+        {
+            return;
+        }
+
         if (curKnockbackRemaining > 0)
         {
             // Apply some knockback movement
@@ -281,7 +288,8 @@ public class PlayerMovement : MonoBehaviour
         pickedUpObj = obj;
         objSrcPosition = pickedUpObj.transform.position;
         objDestPosition = gameObject.transform.position;
-        objDestPosition.y += 4.5f;
+        //objDestPosition.y += 4.5f;
+        objDestPosition.y += height + heightPadding;
 
         // Used to rotate object relative to players rotation when picked up
         offsetRotation = gameObject.transform.rotation.eulerAngles;
@@ -448,14 +456,14 @@ public class PlayerMovement : MonoBehaviour
         bool hitSuccess = Physics.Raycast(transform.position,       // src position
                                           -Vector3.up,              // raycast direction
                                           out hitInfo,              // output info
-                                          height + heightPadding,   // max distance
+                                          halfHeight + heightPadding,   // max distance
                                           ground);                  // layer
         if (hitSuccess)
         {
-            if (hitInfo.distance < height)
+            if (hitInfo.distance < halfHeight)
             {
                 transform.position = Vector3.Lerp(transform.position,
-                                                  transform.position + Vector3.up * height,
+                                                  transform.position + Vector3.up * halfHeight,
                                                   inGroundAdjustSpeed * Time.fixedDeltaTime);
             }
             grounded = true;
@@ -487,8 +495,8 @@ public class PlayerMovement : MonoBehaviour
         {
             // draw debug line
             Vector3 inclineVec = Vector3.Cross(transform.right, hitInfo.normal);
-            Debug.DrawLine(transform.position, transform.position + inclineVec * height * 2, Color.yellow);
-            Debug.DrawLine(transform.position, transform.position + projToPlane * height * 2, Color.magenta);
+            Debug.DrawLine(transform.position, transform.position + inclineVec * height, Color.yellow);
+            Debug.DrawLine(transform.position, transform.position + projToPlane * height, Color.magenta);
         }
 
         movementVec = projToPlane;
@@ -540,6 +548,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        
         if (!inputMoveable)
         {
             movementVec = Vector3.zero;
@@ -556,6 +565,8 @@ public class PlayerMovement : MonoBehaviour
         CheckGround();
         ApplyIncline();
         ApplyGravity();
+
+
 
         rb.MovePosition(rb.position + (movementVec * speedToUse * Time.fixedDeltaTime));
     }

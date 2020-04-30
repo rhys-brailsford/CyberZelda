@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject cameraPrefab;
 
+    [SerializeField] private Inventory inv;
+
     private GameObject playerObj;
     private GameObject cameraObj;
 
@@ -61,6 +63,15 @@ public class GameManager : MonoBehaviour
         {
             cameraObj = cameraObjTest;
         }
+        if (inv == null)
+        {
+            inv = gameObject.GetComponent<Inventory>();
+
+            if (inv == null)
+            {
+                Debug.LogError("Inventory not found on GameManager object");
+            }
+        }
     }
 
 
@@ -71,5 +82,9 @@ public class GameManager : MonoBehaviour
     public GameObject GetCamera()
     {
         return cameraObj;
+    }
+    public Inventory GetInventory()
+    {
+        return inv;
     }
 }

@@ -8,5 +8,6 @@ public class HeartItem : Item
     {
         //:TODO:
         // Add functionality of heart use. Should increase hp of player
+        Debug.Log("Heart picked up and used");
     }
 }
