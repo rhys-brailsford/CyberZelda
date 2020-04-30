@@ -12,6 +12,7 @@ public class ItemList : MonoBehaviour
     {
         public ItemName name;
         public Mesh mesh;
+        public Mesh col;
         public Material mat;
     }
     public List<ItemProperties> itemProperties;
@@ -58,7 +59,7 @@ public class ItemList : MonoBehaviour
             var constructors = itemType.GetConstructors();
 
             Item itemObj = (Item)ScriptableObject.CreateInstance(itemType.ToString());
-            itemObj.Init(curItemProps.name, curItemProps.mesh, curItemProps.mat);
+            itemObj.Init(curItemProps.name, curItemProps.mesh, curItemProps.mat, curItemProps.col);
             items.Add(curItemProps.name, itemObj);
         }
     }

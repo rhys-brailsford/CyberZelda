@@ -20,7 +20,7 @@ public class PickupObj : MonoBehaviour
         Debug.Assert(collider != null, gameObject.name + " expected to have a " + collider.GetType());
         gameObject.GetComponent<MeshFilter>().sharedMesh = obj.staticMesh;
         gameObject.GetComponent<MeshRenderer>().sharedMaterial = obj.mat;
-        gameObject.GetComponent<MeshCollider>().sharedMesh = obj.staticMesh;
+        gameObject.GetComponent<MeshCollider>().sharedMesh = obj.col;
     }
 
     // Update is called once per frame
@@ -33,7 +33,8 @@ public class PickupObj : MonoBehaviour
     {
         print("TRIGGERED by " + other.name);
         List<Tags> tags = other.GetComponent<CustomTags>().tags;
-        if (tags.Contains(Tags.PlayerHitbox))
+        //if (tags.Contains(Tags.PlayerHitbox))
+        if (tags.Contains(Tags.PlayerTrigger))
         {
             obj.PickupUse();
             Destroy(gameObject);

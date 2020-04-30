@@ -7,7 +7,8 @@ public class GunItem : InventoryItem
     public override void PickupUse()
     {
         // Add item to players inventory on pickup
-        GameManager.GM.GetPlayer().GetComponent<Inventory>().AddItem(ItemName.Gun);
+        //GameManager.GM.GetPlayer().GetComponent<Inventory>().AddItem(ItemName.Gun);
+        GameManager.GM.GetInventory().AddItem(ItemName.Gun);
     }
 
     public override void UseItem()

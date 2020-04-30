@@ -9,6 +9,7 @@ public class Inventory : MonoBehaviour
 
     public HashSet<ItemName> inventoryItems;
     public ItemName equippedItem = ItemName.Undefined;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,13 +21,22 @@ public class Inventory : MonoBehaviour
         {
             inventoryItems.Add(name);
         }
+
+        equippedItem = ItemName.Undefined;
     }
 
     public void AddItem(ItemName item)
     {
         // Assert that item is unique in list of inventory items
         Debug.Assert(!inventoryItems.Contains(item), "Duplicate item added to player inventory: " + item.ToString());
+        int sizeBefore = inventoryItems.Count;
         inventoryItems.Add(item);
+
+        // If this is the first inventory item picked up, equip it.
+        if (equippedItem == ItemName.Undefined)
+        {
+            equippedItem = item;
+        }
     }
 
     public bool EquipItem(ItemName itemName)

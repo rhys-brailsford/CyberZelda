@@ -8,5 +8,6 @@ public class AmmoItem : Item
     {
         // :TODO:
         // Add functionality of ammo item. Should increase ammo of player.
+        Debug.Log("Ammo picked up and used");
     }
 }
