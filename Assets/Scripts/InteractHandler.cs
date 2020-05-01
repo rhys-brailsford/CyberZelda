@@ -6,16 +6,25 @@ public class InteractHandler : MonoBehaviour
 {
     public GameObject selectedObj = null;
 
+    private HashSet<GameObject> overlappedObjs;
+
+    private void Start()
+    {
+        overlappedObjs = new HashSet<GameObject>();
+    }
+
     void OnTriggerEnter(Collider collider)
     {
         CustomTags tagsComp = collider.GetComponent<CustomTags>();
         Debug.Assert(tagsComp != null, collider.name + ": has no custom tags component");
         List<Tags> tags = tagsComp.tags;
-        if (tags.Contains(Tags.Interactive) || tags.Contains(Tags.Grabbable)) {
-            if (selectedObj == null)
-            {
-                selectedObj = collider.gameObject;
-            }
+        if (tags.Contains(Tags.Interactive) || tags.Contains(Tags.Grabbable))
+        {
+            overlappedObjs.Add(collider.gameObject);
+            //if (selectedObj == null)
+            //{
+            //    SelectObj(collider.gameObject);
+            //}
         }
     }
 
@@ -24,11 +33,64 @@ public class InteractHandler : MonoBehaviour
         List<Tags> tags = collider.GetComponent<CustomTags>().tags;
         if (tags.Contains(Tags.Interactive) || tags.Contains(Tags.Grabbable))
         {
-            InteractState state = gameObject.GetComponentInParent<PlayerMovement>().interactState;
-            if (selectedObj == collider.gameObject && state == InteractState.Idle)
+            overlappedObjs.Remove(collider.gameObject);
+            //InteractState state = gameObject.GetComponentInParent<PlayerMovement>().interactState;
+            //if (selectedObj == collider.gameObject && state == InteractState.Idle)
+            //{
+            //    DeselectObj();
+            //}
+        }
+    }
+
+    private GameObject ClosestInteractiveObj()
+    {
+        GameObject result = null;
+
+        if (overlappedObjs.Count <= 0)
+        {
+            return null;
+        }
+
+        float closestDistance = float.PositiveInfinity;
+        Vector3 playerPos = gameObject.transform.position;
+
+        foreach (GameObject obj in overlappedObjs)
+        {
+            float curDistance = Vector3.Distance(playerPos, obj.transform.position);
+            if (curDistance < closestDistance)
             {
-                selectedObj = null;
+                closestDistance = curDistance;
+                result = obj;
             }
+        }
+
+        return result;
+    }
+
+    private void Update()
+    {
+        GameObject curClosestObj = ClosestInteractiveObj();
+        if (selectedObj != curClosestObj)
+        {
+            SetSelectedObj(curClosestObj);
+        }        
+    }
+
+    void SetSelectedObj(GameObject newSelection)
+    {
+        // Deselect current selection
+        if (selectedObj != null)
+        {
+            selectedObj.GetComponent<InteractiveObj>().Deselected();
+        }
+
+        // Set new selected object
+        selectedObj = newSelection;
+
+        // Select new selection
+        if (selectedObj != null)
+        {
+            selectedObj.GetComponent<InteractiveObj>().Selected();
         }
     }
 

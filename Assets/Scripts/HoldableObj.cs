@@ -75,4 +75,14 @@ public class HoldableObj : InteractiveObj
             // Land
         }
     }
+
+    public override void Selected()
+    {
+        //throw new System.NotImplementedException();
+    }
+
+    public override void Deselected()
+    {
+        //throw new System.NotImplementedException();
+    }
 }
