@@ -13,7 +13,15 @@ public class ItemBox : InteractiveObj
     private Vector3 forwardDirection;
     private float forwardDirDeg;
 
+    private bool isSelected = false;
+    private bool isFacingFront = false;
+
     private float displayDuration = 3;
+
+    [SerializeField]
+    private Renderer renderer;
+    [SerializeField]
+    private MaterialPropertyBlock propBlock;
     
     private IEnumerator DisplayItemAndDestroy(float displayTime)
     {
@@ -32,14 +40,15 @@ public class ItemBox : InteractiveObj
             return;
         }
 
-        // Check if player is facing the front of the chest
-        float playerAngle = player.GetComponent<PlayerMovement>().GetDirectionDeg();
-
-        if (Mathf.Approximately((playerAngle+180)%360, forwardDirDeg))
+        if (isFacingFront)
         {
             // Open item box
             Debug.Log("ITEM BOX INTERACTION SUCCESS");
             opened = true;
+            // Turn off highlight effect
+            propBlock.SetInt("_IsActive", 0);
+            renderer.SetPropertyBlock(propBlock);
+
             // Pickup item
             obj.PickupUse();
             // Display item contents
@@ -51,13 +60,35 @@ public class ItemBox : InteractiveObj
 
             return;
         }
+    }
+
+    public override void Selected()
+    {
+        Debug.Log("SELECTED!");
+        isSelected = true;
 
 
+        propBlock.SetInt("_IsSelected", 1);
+        renderer.SetPropertyBlock(propBlock);
+
+        //gameObject.GetComponent<MeshRenderer>().sharedMaterial.SetInt("_IsSelected", 1);
+        //throw new System.NotImplementedException();
+    }
+    public override void Deselected()
+    {
+        Debug.Log("DESELECTED!");
+        isSelected = false;
+
+        propBlock.SetInt("_IsSelected", 0);
+        renderer.SetPropertyBlock(propBlock);
+
+        //gameObject.GetComponent<MeshRenderer>().sharedMaterial.SetInt("IsSelected", 0);
         //throw new System.NotImplementedException();
     }
 
+
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         forwardDirDeg = transform.rotation.eulerAngles.y%360;
 
@@ -79,16 +110,37 @@ public class ItemBox : InteractiveObj
         Vector3 displayedItemPos = gameObject.transform.position;
         displayedItemPos.y = 6;
 
-        // Chest doesnt use attribute sof object
-        //MeshFilter filter = gameObject.GetComponent<MeshFilter>();
-        //MeshRenderer renderer = gameObject.GetComponent<MeshRenderer>();
-        //MeshCollider collider = gameObject.GetComponent<MeshCollider>();
-        //Debug.Assert(filter != null, gameObject.name + " expected to have a " + filter.GetType());
-        //Debug.Assert(renderer != null, gameObject.name + " expected to have a " + renderer.GetType());
-        //Debug.Assert(collider != null, gameObject.name + " expected to have a " + collider.GetType());
-        //gameObject.GetComponent<MeshFilter>().sharedMesh = obj.staticMesh;
-        //gameObject.GetComponent<MeshRenderer>().sharedMaterial = obj.mat;
-        //gameObject.GetComponent<MeshCollider>().sharedMesh = obj.staticMesh;
+        propBlock = new MaterialPropertyBlock();
+        renderer = gameObject.GetComponent<Renderer>();
+        renderer.GetPropertyBlock(propBlock);
     }
 
+    private void SetHighlight(bool isSelected)
+    {
+        bool curSelectionValue = propBlock.GetInt("_IsSelected") > 0.5f ? true : false;
+
+        // If there is no change, we don't need to do anything
+        if (isSelected == curSelectionValue)
+        {
+            return;
+        }
+
+        // Because there is a change, we need to toggle the value
+        int newSelectionValue = isSelected ? 1 : 0;
+        propBlock.SetInt("_IsSelected", newSelectionValue);
+        renderer.SetPropertyBlock(propBlock);
+    }
+
+    private void Update()
+    {
+        if (isSelected && !opened)
+        {
+            float playerAngle = GameManager.GM.GetPlayer().GetComponent<PlayerMovement>().GetDirectionDeg();
+
+            isFacingFront = Mathf.Approximately((playerAngle + 180) % 360, forwardDirDeg);
+
+            SetHighlight(isFacingFront);
+        }
+            
+    }
 }
