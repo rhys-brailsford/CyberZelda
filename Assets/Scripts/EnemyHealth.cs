@@ -32,6 +32,11 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
+    public bool IsInvulnerable()
+    {
+        return isInvuln;
+    }
+
     public void TakeDamage(float damagePoints)
     {
         if (isInvuln) return;
