@@ -70,6 +70,7 @@ public class InteractHandler : MonoBehaviour
     private void Update()
     {
         GameObject curClosestObj = ClosestInteractiveObj();
+        InteractState state = gameObject.GetComponentInParent<PlayerMovement>().interactState;
         if (selectedObj != curClosestObj)
         {
             SetSelectedObj(curClosestObj);
@@ -78,6 +79,13 @@ public class InteractHandler : MonoBehaviour
 
     void SetSelectedObj(GameObject newSelection)
     {
+        // Ignore new selections if picking up or holding object
+        InteractState state = gameObject.GetComponentInParent<PlayerMovement>().interactState;
+        if (state == InteractState.PickingUp || state == InteractState.Holding)
+        {
+            return;
+        }
+
         // Deselect current selection
         if (selectedObj != null)
         {
