@@ -19,7 +19,7 @@ public class ItemBox : InteractiveObj
     private float displayDuration = 3;
 
     [SerializeField]
-    private Renderer renderer;
+    private Renderer boxRenderer;
     [SerializeField]
     private MaterialPropertyBlock propBlock;
     
@@ -47,7 +47,7 @@ public class ItemBox : InteractiveObj
             opened = true;
             // Turn off highlight effect
             propBlock.SetInt("_IsActive", 0);
-            renderer.SetPropertyBlock(propBlock);
+            boxRenderer.SetPropertyBlock(propBlock);
 
             // Pickup item
             obj.PickupUse();
@@ -69,7 +69,7 @@ public class ItemBox : InteractiveObj
 
 
         propBlock.SetInt("_IsSelected", 1);
-        renderer.SetPropertyBlock(propBlock);
+        boxRenderer.SetPropertyBlock(propBlock);
 
         //gameObject.GetComponent<MeshRenderer>().sharedMaterial.SetInt("_IsSelected", 1);
         //throw new System.NotImplementedException();
@@ -80,7 +80,7 @@ public class ItemBox : InteractiveObj
         isSelected = false;
 
         propBlock.SetInt("_IsSelected", 0);
-        renderer.SetPropertyBlock(propBlock);
+        boxRenderer.SetPropertyBlock(propBlock);
 
         //gameObject.GetComponent<MeshRenderer>().sharedMaterial.SetInt("IsSelected", 0);
         //throw new System.NotImplementedException();
@@ -111,8 +111,8 @@ public class ItemBox : InteractiveObj
         displayedItemPos.y = 6;
 
         propBlock = new MaterialPropertyBlock();
-        renderer = gameObject.GetComponent<Renderer>();
-        renderer.GetPropertyBlock(propBlock);
+        boxRenderer = gameObject.GetComponent<Renderer>();
+        boxRenderer.GetPropertyBlock(propBlock);
     }
 
     private void SetHighlight(bool isSelected)
@@ -128,7 +128,7 @@ public class ItemBox : InteractiveObj
         // Because there is a change, we need to toggle the value
         int newSelectionValue = isSelected ? 1 : 0;
         propBlock.SetInt("_IsSelected", newSelectionValue);
-        renderer.SetPropertyBlock(propBlock);
+        boxRenderer.SetPropertyBlock(propBlock);
     }
 
     private void Update()

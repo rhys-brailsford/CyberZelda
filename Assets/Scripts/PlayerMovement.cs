@@ -8,8 +8,6 @@ public class PlayerMovement : MonoBehaviour
 {
     public float speed = 1;
 
-    public CharacterCollision collisionScript;
-
     private Rigidbody rb;
 
     public Direction currentDirection;
@@ -33,9 +31,9 @@ public class PlayerMovement : MonoBehaviour
     private GameObject pickedUpObj = null;
     private float curPickingUpDuration = 0;
     public float pickingUpDuration = 1;
-    private Vector3 offsetRotation;
-    private Vector3 objSrcPosition;
-    private Vector3 objDestPosition;
+    private Vector3 pickedUpOffsetRotation;
+    private Vector3 pickedUpSrcPosition;
+    private Vector3 pickedUpDestPosition;
 
     public float throwStrength = 10;
     public float throwDur = 1;
@@ -46,27 +44,23 @@ public class PlayerMovement : MonoBehaviour
     public InteractState interactState = InteractState.Idle;
     public MovementState movState = MovementState.Idle;
 
-    private bool incline = false;
-    private float inclineFactor;
-    private Direction inclineDirection;
-    private float inclineStartCoord;
-    private float inclineStartY;
-
     public float height = 2;
     private float halfHeight;
     public float heightPadding = 0.5f;
     public float inGroundAdjustSpeed = 5;
     public LayerMask ground;
-    public bool debug = false;
-
     RaycastHit hitInfo;
     bool grounded;
+
+
+    public bool debug = false;
+
+
 
     // Start is called before the first frame update
     void Start()
     {
         scaledSpeed = speed / 10;
-        //scaledSpeed = speed;
         currentDirection = Direction.South;
         movementVec = new Vector3(0, 0, 0);
         rb = gameObject.GetComponent<Rigidbody>();
@@ -286,13 +280,13 @@ public class PlayerMovement : MonoBehaviour
         curPickingUpDuration = 0;
         DisableInputMovement();
         pickedUpObj = obj;
-        objSrcPosition = pickedUpObj.transform.position;
-        objDestPosition = gameObject.transform.position;
+        pickedUpSrcPosition = pickedUpObj.transform.position;
+        pickedUpDestPosition = gameObject.transform.position;
         //objDestPosition.y += 4.5f;
-        objDestPosition.y += height + heightPadding;
+        pickedUpDestPosition.y += height + heightPadding;
 
         // Used to rotate object relative to players rotation when picked up
-        offsetRotation = gameObject.transform.rotation.eulerAngles;
+        pickedUpOffsetRotation = gameObject.transform.rotation.eulerAngles;
 
         interactState = InteractState.PickingUp;
     }
@@ -306,7 +300,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        pickedUpObj.transform.position = Vector3.Lerp(objSrcPosition, objDestPosition, curPickingUpDuration / pickingUpDuration);
+        pickedUpObj.transform.position = Vector3.Lerp(pickedUpSrcPosition, pickedUpDestPosition, curPickingUpDuration / pickingUpDuration);
 
         curPickingUpDuration += Time.deltaTime;
     }
@@ -318,7 +312,7 @@ public class PlayerMovement : MonoBehaviour
         pickedUpObj.transform.position = temp;
 
         // Rotate object given initial offset based on player rotation
-        pickedUpObj.transform.rotation = Quaternion.Euler(gameObject.transform.rotation.eulerAngles - offsetRotation);
+        pickedUpObj.transform.rotation = Quaternion.Euler(gameObject.transform.rotation.eulerAngles - pickedUpOffsetRotation);
     }
 
     public void ThrowObj()
@@ -367,76 +361,6 @@ public class PlayerMovement : MonoBehaviour
         curThrowDur += Time.deltaTime;
     }
 
-    public void StartIncline(Direction dir, float factor)
-    {
-        inclineStartY = transform.position.y;
-        inclineFactor = factor;
-        inclineDirection = dir;
-
-        switch (inclineDirection)
-        {
-            case (Direction.North):
-                inclineStartCoord = transform.position.z;
-                break;
-            case (Direction.East):
-                inclineStartCoord = transform.position.x;
-                break;
-            case (Direction.South):
-                inclineStartCoord = transform.position.z;
-                break;
-            case (Direction.West):
-                inclineStartCoord = transform.position.x;
-                break;
-            default:
-                Debug.Log("unsupported incline direction, error");
-                inclineStartCoord = transform.position.z;
-                break;
-        }
-
-        incline = true;
-    }
-    public void EndIncline()
-    {
-        incline = false;
-    }
-    private void UpdateIncline()
-    {
-        if (!incline)
-        {
-            return;
-        }
-        float curCoordinate;
-        switch (inclineDirection)
-        {
-            case (Direction.North):
-                curCoordinate = movementVec.z;
-                break;
-            case (Direction.East):
-                curCoordinate = movementVec.x;
-                break;
-            case (Direction.South):
-                curCoordinate = -movementVec.z;
-                break;
-            case (Direction.West):
-                curCoordinate = -movementVec.x;
-                break;
-            default:
-                Debug.Log("unsupported incline direction, error");
-                curCoordinate = movementVec.z;
-                break;
-        }
-        movementVec.y = curCoordinate * inclineFactor;
-        movementVec = Vector3.Normalize(movementVec);
-
-        //float yOffset = (curCoordinate - inclineStartCoord) * inclineFactor;
-        //if (inclineDirection == Direction.South || inclineDirection == Direction.West)
-        //{
-        //    yOffset *= -1;
-        //}
-
-        //float y = (inclineStartY + yOffset);
-    }
-
     public void UseEquipped()
     {
         Inventory inv = PlayerStats.PS.Inventory();
@@ -473,7 +397,6 @@ public class PlayerMovement : MonoBehaviour
             grounded = false;
         }
     }
-
     void ApplyGravity()
     {
         if (!grounded)
@@ -485,7 +408,6 @@ public class PlayerMovement : MonoBehaviour
             movementVec += Physics.gravity;
         }
     }
-
     void ApplyIncline()
     {
         // Project movement vector to plane of incline
@@ -565,8 +487,6 @@ public class PlayerMovement : MonoBehaviour
         CheckGround();
         ApplyIncline();
         ApplyGravity();
-
-
 
         rb.MovePosition(rb.position + (movementVec * speedToUse * Time.fixedDeltaTime));
     }
