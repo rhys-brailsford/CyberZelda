@@ -158,7 +158,7 @@ GameObject:
   - component: {fileID: 5610505266270730139}
   m_Layer: 10
   m_Name: PF_Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -241,7 +241,7 @@ Rigidbody:
   m_AngularDrag: Infinity
   m_UseGravity: 0
   m_IsKinematic: 0
-  m_Interpolate: 2
+  m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!114 &5610505266270730130
@@ -253,12 +253,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 5610505266270730085}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c77f2fd830990fd4f8024af0df8b7b3d, type: 3}
+  m_Script: {fileID: 11500000, guid: fbd5ee28fca262e4cac0f6abc097aef6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   weaponObject: {fileID: 5610505266777149962}
   interactObject: {fileID: 5610505266695873501}
-  inventoryHandler: {fileID: 0}
 --- !u!114 &5610505266270730084
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,28 +267,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 5610505266270730085}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a55debf93a81e2c48ade32f7bf306567, type: 3}
+  m_Script: {fileID: 11500000, guid: 162f52211b5dc694bae99a996b4bcf30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 50
-  collisionScript: {fileID: 0}
+  speed: 60
   currentDirection: 0
   inputAge: 00000000000000000000000000000000
-  knockbackDuration: 0.2
+  knockbackDuration: 0.3
   knockbackStrength: 25
   isGrabbingObj: 0
-  pickingUpDuration: 0.5
-  throwStrength: 20
-  throwDur: 0.5
+  pickingUpDuration: 1
+  throwStrength: 5
+  throwDur: 1
   interactState: 0
   movState: 0
   height: 1.8
-  heightPadding: 0.1
+  heightPadding: 0.5
   inGroundAdjustSpeed: 5
   ground:
     serializedVersion: 2
     m_Bits: 256
-  debug: 1
+  debug: 0
 --- !u!114 &5610505266270730141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -299,11 +297,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 5610505266270730085}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ac225d6b14415a4ba32313a3758db58, type: 3}
+  m_Script: {fileID: 11500000, guid: fdf7e5544efe2f54aa926d1b0d235ae7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 0}
   heightDiff: 15
+  triggerBoundsObj: {fileID: 2255922397401165752}
+  blockX: 0
+  blockZ: 0
   offsetZ: 0
 --- !u!114 &5610505266270730140
 MonoBehaviour:
@@ -314,7 +315,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5610505266270730085}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 657c3e8986528c64c9dcda051f65e68c, type: 3}
+  m_Script: {fileID: 11500000, guid: 04f954cf897ddfb4b9003d77ef5c67b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   invDuration: 1
@@ -402,7 +403,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5610505266695873501}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c412ebed56482e45b5ee0120c0f860d, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f4f024a7d30b584cad4c68d60bce693, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   selectedObj: {fileID: 0}
@@ -418,7 +419,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43dac268e6803224ba08d90e828c5c22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tags: 00000000
+  tags: 
 --- !u!54 &5610505266695873488
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -541,15 +542,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 5610505266777149962}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e46633ee9d5348443ad0b1c304e86051, type: 3}
+  m_Script: {fileID: 11500000, guid: d5f8bdab702d17f4f9ad61e21a843aec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 25
+  damage: 5
   weaponMorphs:
   - {fileID: 1325741398042561978, guid: 210f9ce6f1608bb4398550bd86f2d173, type: 3}
   - {fileID: -4653723985005495822, guid: 529b7de12e3765740abb309bf273a5df, type: 3}
   - {fileID: 8031224773077666571, guid: d292b73a4651f9c4f996fd12769081f6, type: 3}
-  attackSpeedSec: 0.15
+  attackSpeedSec: 1
   movementController: {fileID: 5610505266270730084}
 --- !u!54 &5610505266777149964
 Rigidbody:

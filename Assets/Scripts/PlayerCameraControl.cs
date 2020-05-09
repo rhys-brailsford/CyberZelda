@@ -6,9 +6,10 @@ public class PlayerCameraControl : MonoBehaviour
 {
     public GameObject mainCamera;
     public float heightDiff;
+    public GameObject triggerBoundsObj;
 
-    private bool blockX = false;
-    private bool blockZ = false;
+    public bool blockX = false;
+    public bool blockZ = false;
 
     public float offsetZ = 0;
 
@@ -20,6 +21,11 @@ public class PlayerCameraControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (mainCamera == null)
+        {
+            mainCamera = GameManager.GM.GetCamera();
+        }
+
         float playerX = gameObject.transform.position.x;
         float playerY = gameObject.transform.position.y;
         float playerZ = gameObject.transform.position.z;
@@ -38,48 +44,32 @@ public class PlayerCameraControl : MonoBehaviour
         }
         mainCamera.transform.position = newPosition;
 
-        mainCamera.transform.LookAt(gameObject.transform, new Vector3(0,0,1));
-    }
-
-    void OnTriggerEnter(Collider collider)
-    {
-        //print(collider.name);
-
-        List<Tags> tags = collider.GetComponent<CustomTags>().tags;
-        if (tags.Contains(Tags.CamBlocking))
+        if (!blockX && !blockZ)
         {
-            BlockDirection blockDir = collider.GetComponent<CameraBlockCollision>().blockDir;
-
-            SwitchBlockFlag(blockDir);
-
-            //Debug.Log("CamBlocking entered");
+            mainCamera.transform.LookAt(gameObject.transform, new Vector3(0, 0, 1));
         }
-        
     }
 
-    void OnTriggerExit(Collider collider)
+    public void OffsetCam(Vector3 offset)
     {
-        List<Tags> tags = collider.GetComponent<CustomTags>().tags;
-        if (tags.Contains(Tags.CamBlocking))
-        {
-            BlockDirection blockDir = collider.GetComponent<CameraBlockCollision>().blockDir;
-
-            SwitchBlockFlag(blockDir);
-            //Debug.Log("CamBlocking exited");
-        }
-
-
+        mainCamera.transform.position += offset;
     }
 
-    void SwitchBlockFlag(BlockDirection direction)
+    public void SwitchBlockFlag(BlockDirection direction, bool newValue)
     {
         switch (direction)
         {
-            case (BlockDirection.X):
-                blockX = !blockX;
+            case (BlockDirection.PosX):
+                blockX = newValue;
                 break;
-            case (BlockDirection.Z):
-                blockZ = !blockZ;
+            case (BlockDirection.NegX):
+                blockX = newValue;
+                break;
+            case (BlockDirection.PosZ):
+                blockZ = newValue;
+                break;
+            case (BlockDirection.NegZ):
+                blockZ = newValue;
                 break;
             default:
                 break;

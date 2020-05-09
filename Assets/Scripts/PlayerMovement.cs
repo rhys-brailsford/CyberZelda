@@ -61,10 +61,33 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         scaledSpeed = speed / 10;
-        currentDirection = Direction.South;
         movementVec = new Vector3(0, 0, 0);
         rb = gameObject.GetComponent<Rigidbody>();
         halfHeight = height / 2.0f;
+
+        //currentDirection = Direction.South;
+        float rotation = gameObject.transform.rotation.eulerAngles.y;
+        int intRotation = Mathf.RoundToInt((rotation % 360)/90f)%4;
+
+        switch (intRotation)
+        {
+            case (0):
+                currentDirection = Direction.North;
+                break;
+            case (1):
+                currentDirection = Direction.East;
+                break;
+            case (2):
+                currentDirection = Direction.South;
+                break;
+            case (3):
+                currentDirection = Direction.West;
+                break;
+            default:
+                currentDirection = Direction.North;
+                break;
+        }
+        
     }
 
     void UpdateInputAge()

@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private Inventory inv;
 
+    [SerializeField] private LevelManager levelManager;
+
     private GameObject playerObj;
     private GameObject cameraObj;
 
@@ -25,8 +27,9 @@ public class GameManager : MonoBehaviour
     {
         if (GM != null)
         {
-            Debug.LogError("Only one ItemList allowed.");
-            Destroy(GM);
+            Debug.LogError("Only one GameManager allowed.");
+            Destroy(gameObject);
+            return;
         }
         else
         {
@@ -52,7 +55,8 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            playerObj = playerObjTest;
+            playerObj = Instantiate(playerObjTest);
+            Destroy(playerObjTest);
         }
 
         if (cameraObjTest == null)
@@ -61,7 +65,8 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            cameraObj = cameraObjTest;
+            cameraObj = Instantiate(cameraObjTest);
+            Destroy(cameraObjTest);
         }
         if (inv == null)
         {
@@ -74,7 +79,67 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void SpawnPlayer(Vector3 position, Direction direction, Vector3 camOffset)
+    {
+        if (playerObj == null)
+        {
+            Vector3 playerDirection;
+            switch (direction)
+            {
+                case (Direction.North):
+                    playerDirection = new Vector3(0, 0, 0);
+                    break;
+                case (Direction.East):
+                    playerDirection = new Vector3(0, 90, 0);
+                    break;
+                case (Direction.South):
+                    playerDirection = new Vector3(0, 180, 0);
+                    break;
+                case (Direction.West):
+                    playerDirection = new Vector3(0, 270, 0);
+                    break;
+                default:
+                    playerDirection = new Vector3(0, 0, 0);
+                    break;
+            }
 
+            // Destroy any existing player objects
+            GameObject[] objs = GameObject.FindGameObjectsWithTag("Player");
+            foreach (GameObject obj in objs)
+            {
+                Destroy(obj);
+            }
+
+            playerObj = Instantiate(playerPrefab, position, Quaternion.Euler(playerDirection));
+
+            // If camera is offset, flag player camera control to block movement in that axis
+            if (camOffset.x != 0)
+            {
+                playerObj.GetComponent<PlayerCameraControl>().SwitchBlockFlag(BlockDirection.PosX, true);
+            }
+            if (camOffset.z != 0)
+            {
+                playerObj.GetComponent<PlayerCameraControl>().SwitchBlockFlag(BlockDirection.PosZ, true);
+            }
+        }
+
+        if (cameraObj == null)
+        {
+            // Destroy any existing MainCamera objects
+            GameObject[] objs = GameObject.FindGameObjectsWithTag("MainCamera");
+            foreach (GameObject obj in objs)
+            {
+                Destroy(obj);
+            }
+
+            cameraObj = Instantiate(cameraPrefab, position+camOffset, Quaternion.Euler(90,0,0));
+        }
+    }
+
+    public GameObject GetPlayerPrefab()
+    {
+        return playerPrefab;
+    }
     public GameObject GetPlayer()
     {
         return playerObj;
@@ -86,5 +151,9 @@ public class GameManager : MonoBehaviour
     public Inventory GetInventory()
     {
         return inv;
+    }
+    public LevelManager GetLevelManager()
+    {
+        return levelManager;
     }
 }

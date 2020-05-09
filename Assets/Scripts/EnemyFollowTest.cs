@@ -41,7 +41,7 @@ public class EnemyFollowTest : MonoBehaviour
         if (debug)
         {
             Debug.DrawLine(gameObject.transform.position, agent.destination, Color.red);
-            //Debug.Log(agent.remainingDistance);
+            Debug.Log("pos:" + gameObject.transform.position);
         }
 
         if (result)

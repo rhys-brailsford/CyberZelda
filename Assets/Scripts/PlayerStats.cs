@@ -13,14 +13,15 @@ public class PlayerStats : MonoBehaviour
     private Inventory inv;
 
     [SerializeField]
-    private float healthPoints;
+    private float healthPoints = 100;
 
     void Awake()
     {
         if (PS != null)
         {
-            Debug.LogError("Only one PlayerHealth allowed.");
-            Destroy(PS);
+            Debug.LogError("Only one PlayerStats allowed.");
+            Destroy(gameObject);
+            return;
         }
         else
         {

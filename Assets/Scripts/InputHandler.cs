@@ -14,7 +14,7 @@ public class InputHandler : MonoBehaviour
 
     private bool useHeld = false;
 
-    public Inventory inventoryHandler;
+    private Inventory inventoryHandler;
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +24,7 @@ public class InputHandler : MonoBehaviour
 
         weaponScript = weaponObject.GetComponent<Weapon>();
         interactHandler = interactObject.GetComponent<InteractHandler>();
+        inventoryHandler = GameManager.GM.GetInventory();
 
         Debug.Assert(weaponScript != null, "InputHandler: Weapon Object must contain Weapon script!");
         Debug.Assert(interactHandler != null, "InputHandler: Interact Object must contain InteractHandler script!");
