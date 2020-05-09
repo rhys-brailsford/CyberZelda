@@ -5,7 +5,7 @@ using UnityEngine;
 public class ItemList : MonoBehaviour
 {
     // Singleton ItemList variable
-    public static ItemList IL;
+    public static ItemList IL { get; private set; }
 
     [System.Serializable]
     public struct ItemProperties
@@ -26,7 +26,8 @@ public class ItemList : MonoBehaviour
         if (IL != null)
         {
             Debug.LogError("Only one ItemList allowed.");
-            Destroy(IL);
+            Destroy(gameObject);
+            return;
         }
         else
         {
