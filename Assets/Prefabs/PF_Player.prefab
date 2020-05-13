@@ -282,7 +282,7 @@ MonoBehaviour:
   interactState: 0
   movState: 0
   height: 1.8
-  heightPadding: 0.5
+  heightPadding: 0.1
   inGroundAdjustSpeed: 5
   ground:
     serializedVersion: 2
@@ -550,7 +550,7 @@ MonoBehaviour:
   - {fileID: 1325741398042561978, guid: 210f9ce6f1608bb4398550bd86f2d173, type: 3}
   - {fileID: -4653723985005495822, guid: 529b7de12e3765740abb309bf273a5df, type: 3}
   - {fileID: 8031224773077666571, guid: d292b73a4651f9c4f996fd12769081f6, type: 3}
-  attackSpeedSec: 1
+  attackSpeedSec: 0.2
   movementController: {fileID: 5610505266270730084}
 --- !u!54 &5610505266777149964
 Rigidbody:

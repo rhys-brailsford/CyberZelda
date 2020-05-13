@@ -12,4 +12,6 @@ public enum Tags { Undefined, Blocking, CamBlocking, Enemy, PlayerWeapon, Player
 public enum InteractState { Idle, Grabbing, PickingUp, Holding, Throwing, Interacting };
 public enum MovementState { Idle, Walking, KnockedBack };
 public enum ItemName { Undefined, Heart, Ammo, Gun, TempInvItem1 };
+public enum EnemyState { Passive, Aggro };
 public enum LevelName { TestLevel1, TestLevel2, TestLevel3 };
+
