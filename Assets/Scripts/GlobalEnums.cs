@@ -13,5 +13,6 @@ public enum InteractState { Idle, Grabbing, PickingUp, Holding, Throwing, Intera
 public enum MovementState { Idle, Walking, KnockedBack };
 public enum ItemName { Undefined, Heart, Ammo, Gun, TempInvItem1 };
 public enum EnemyState { Passive, Aggro };
+public enum EnemyMovementState { Idle, Following, Leashing, Resetting, Patrolling };
 public enum LevelName { TestLevel1, TestLevel2, TestLevel3 };
 
