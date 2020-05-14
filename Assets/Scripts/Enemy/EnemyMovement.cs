@@ -75,51 +75,54 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
-        // Only look for player if aggro'd, not knockedBack, and not leashing
-        if (enemyState == EnemyState.Aggro && !knockedBack && moveState != EnemyMovementState.Leashing)
+        if (enemyState != EnemyState.AlwaysPassive)
         {
-            if (CanSeePlayer())
+            // Only look for player if aggro'd, not knockedBack, and not leashing
+            if (enemyState == EnemyState.Aggro && !knockedBack && moveState != EnemyMovementState.Leashing)
             {
-                Vector3 playerPos = GameManager.GM.GetPlayer().transform.position;
-                agent.SetDestination(playerPos);
-                moveState = EnemyMovementState.Following;
-            }
-        }
-
-        if (moveState == EnemyMovementState.Following)
-        {
-            UpdatePatrolDestination();
-            float distFromLeash = Vector3.Distance(gameObject.transform.position, curPatrolDest);
-
-            if (distFromLeash > maxLeashDistance)
-            {
-                moveState = EnemyMovementState.Leashing;
-                agent.SetDestination(curPatrolDest);
-            }
-        }
-        else if (moveState == EnemyMovementState.Leashing)
-        {
-            UpdatePatrolDestination();
-            float distFromLeash = Vector3.Distance(gameObject.transform.position, curPatrolDest);
-
-            if (distFromLeash < minLeashDistance)
-            {
-                moveState = EnemyMovementState.Resetting;
-            }
-        }
-        else if (moveState == EnemyMovementState.Resetting)
-        {
-            if (ReachedDestination())
-            {
-                if (patrols)
+                if (CanSeePlayer())
                 {
-                    moveState = EnemyMovementState.Patrolling;
-                    UpdatePatrolDestination();
+                    Vector3 playerPos = GameManager.GM.GetPlayer().transform.position;
+                    agent.SetDestination(playerPos);
+                    moveState = EnemyMovementState.Following;
+                }
+            }
+
+            if (moveState == EnemyMovementState.Following)
+            {
+                UpdatePatrolDestination();
+                float distFromLeash = Vector3.Distance(gameObject.transform.position, curPatrolDest);
+
+                if (distFromLeash > maxLeashDistance)
+                {
+                    moveState = EnemyMovementState.Leashing;
                     agent.SetDestination(curPatrolDest);
                 }
-                else
+            }
+            else if (moveState == EnemyMovementState.Leashing)
+            {
+                UpdatePatrolDestination();
+                float distFromLeash = Vector3.Distance(gameObject.transform.position, curPatrolDest);
+
+                if (distFromLeash < minLeashDistance)
                 {
-                    moveState = EnemyMovementState.Idle;
+                    moveState = EnemyMovementState.Resetting;
+                }
+            }
+            else if (moveState == EnemyMovementState.Resetting)
+            {
+                if (ReachedDestination())
+                {
+                    if (patrols)
+                    {
+                        moveState = EnemyMovementState.Patrolling;
+                        UpdatePatrolDestination();
+                        agent.SetDestination(curPatrolDest);
+                    }
+                    else
+                    {
+                        moveState = EnemyMovementState.Idle;
+                    }
                 }
             }
         }
@@ -200,6 +203,9 @@ public class EnemyMovement : MonoBehaviour
 
     public void Aggro()
     {
+        // If enemy is always passive, don't make it aggressive or follow player
+        if (enemyState == EnemyState.AlwaysPassive) return;
+
         enemyState = EnemyState.Aggro;
         moveState = EnemyMovementState.Following;
     }

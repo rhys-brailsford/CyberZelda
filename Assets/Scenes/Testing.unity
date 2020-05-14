@@ -3355,5 +3355,15 @@ PrefabInstance:
       propertyPath: patrolObjs.Array.data[3]
       value: 
       objectReference: {fileID: 195470219}
+    - target: {fileID: 7675818166550121332, guid: bbe074be14861d5469c861256a36eab9,
+        type: 3}
+      propertyPath: enemyState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7675818166550121332, guid: bbe074be14861d5469c861256a36eab9,
+        type: 3}
+      propertyPath: debug
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bbe074be14861d5469c861256a36eab9, type: 3}
