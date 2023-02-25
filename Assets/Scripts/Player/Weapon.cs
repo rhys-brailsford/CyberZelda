@@ -13,6 +13,8 @@ public class Weapon : MonoBehaviour
 
     public PlayerMovement movementController;
 
+    public bool displayWeaponCollision = false;
+
 
 
     // Start is called before the first frame update
@@ -47,7 +49,11 @@ public class Weapon : MonoBehaviour
         attacking = true;
         curAttackDuration = 0;
         gameObject.GetComponent<MeshCollider>().enabled = true;
-        gameObject.GetComponent<MeshRenderer>().enabled = true;
+
+        if (displayWeaponCollision)
+        {
+            gameObject.GetComponent<MeshRenderer>().enabled = true;
+        }
 
         movementController.DisableInputMovement();
     }

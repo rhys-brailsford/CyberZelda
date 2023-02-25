@@ -20,6 +20,10 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private LevelManager levelManager;
 
+    public AudioSource audioPlayer;
+
+    public bool playerDebug = false;
+
     private GameObject playerObj;
     private GameObject cameraObj;
 
@@ -48,26 +52,35 @@ public class GameManager : MonoBehaviour
             cameraPrefab = (GameObject)Resources.Load("PF_DefaultCamera");
         }
 
-        // Create player and camera object
-        if (playerObjTest == null)
+        if (playerDebug)
         {
-            playerObj = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+            playerObj = playerObjTest;
+            cameraObj = cameraObjTest;
         }
         else
         {
-            playerObj = Instantiate(playerObjTest);
-            Destroy(playerObjTest);
+            // Create player and camera object
+            if (playerObjTest == null)
+            {
+                playerObj = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+            }
+            else
+            {
+                playerObj = Instantiate(playerObjTest);
+                Destroy(playerObjTest);
+            }
+
+            if (cameraObjTest == null)
+            {
+                cameraObj = Instantiate(cameraPrefab, cameraPrefab.transform.position, cameraPrefab.transform.rotation);
+            }
+            else
+            {
+                cameraObj = Instantiate(cameraObjTest);
+                Destroy(cameraObjTest);
+            }
         }
 
-        if (cameraObjTest == null)
-        {
-            cameraObj = Instantiate(cameraPrefab, cameraPrefab.transform.position, cameraPrefab.transform.rotation);
-        }
-        else
-        {
-            cameraObj = Instantiate(cameraObjTest);
-            Destroy(cameraObjTest);
-        }
         if (inv == null)
         {
             inv = gameObject.GetComponent<Inventory>();

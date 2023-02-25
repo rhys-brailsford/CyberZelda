@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerHitbox : MonoBehaviour
 {
     public float invDuration = 1;
+    public Animator animator;
 
     private bool isInvuln = false;
 
@@ -72,11 +73,17 @@ public class PlayerHitbox : MonoBehaviour
         }
 
         float curHealth = PlayerStats.PS.TakeDamage(damagePoints);
-        if (curHealth < 0)
+        
+        if (curHealth <= 0)
         {
             // Die
             // :TODO:
             // Add death functionality.
+            animator.SetTrigger("Die");
+        }
+        else
+        {
+            animator.SetTrigger("Damaged");
         }
 
         if (gameObject.GetComponent<PlayerMovement>().Moveable())

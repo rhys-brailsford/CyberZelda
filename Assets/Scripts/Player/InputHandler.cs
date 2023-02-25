@@ -7,6 +7,7 @@ public class InputHandler : MonoBehaviour
     public GameObject weaponObject;
     private Weapon weaponScript;
     private bool atkHeld = false;
+    public Animator animator;
 
     public GameObject interactObject;
     private InteractHandler interactHandler;
@@ -99,6 +100,7 @@ public class InputHandler : MonoBehaviour
             {
                 Debug.Log("Attack Input");
                 weaponScript.StartAttack();
+                animator.SetTrigger("Attack");
             }
             else
             {

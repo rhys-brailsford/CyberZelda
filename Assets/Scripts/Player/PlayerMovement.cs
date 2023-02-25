@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
 {
     public float speed = 1;
 
+    public Animator animator;
     private Rigidbody rb;
 
     public Direction currentDirection;
@@ -510,6 +511,9 @@ public class PlayerMovement : MonoBehaviour
         CheckGround();
         ApplyIncline();
         ApplyGravity();
+
+        bool isMoving = movementVec != Vector3.zero;
+        animator.SetBool("IsMoving", isMoving);
 
         rb.MovePosition(rb.position + (movementVec * speedToUse * Time.fixedDeltaTime));
     }
